@@ -95,27 +95,12 @@ cic-ai-config-helper --version              # 显示版本
 | Messages (Anthropic Claude) | `https://ai.ecustcic.com/api/v1/messages` |
 | Embeddings (OpenAI) | `https://ai.ecustcic.com/api/v1/embeddings` |
 
-## 支持的 7 种 AI 编码工具
+## 暂时支持的 2 种 AI 编码工具
 
 | 工具 | 图标 | 配置文件 |
 |------|------|----------|
 | **Claude Code** | 🤖 | `~/.claude/settings.json` |
 | **OpenCode** | 📂 | `~/.config/opencode/config.json` |
-
-## 发布到 npm
-
-```bash
-cd cic-ai-config-helper
-
-# 登录
-npm login
-
-# 发布
-npm publish
-
-# 完成！用户只需：
-npx cic-ai-config-helper
-```
 
 ## License
 
