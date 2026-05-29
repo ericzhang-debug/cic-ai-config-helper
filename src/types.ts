@@ -11,7 +11,7 @@ export interface ApiEndpoints {
 }
 
 /** Supported AI coding tools */
-export type AiToolId = 'claude-code' | 'cursor' | 'continue' | 'github-copilot' | 'opencode' | 'crush' | 'factory-droid';
+export type AiToolId = 'claude-code' | 'opencode';
 
 /** Tool configuration profile */
 export interface ToolProfile {
@@ -62,33 +62,6 @@ export const TOOLS: ToolProfile[] = [
     icon: '🤖',
   },
   {
-    id: 'cursor',
-    name: 'Cursor',
-    nameZh: 'Cursor',
-    configPaths: [],
-    description: 'AI-first code editor',
-    descriptionZh: 'AI 优先的代码编辑器',
-    icon: '📝',
-  },
-  {
-    id: 'continue',
-    name: 'Continue.dev',
-    nameZh: 'Continue.dev',
-    configPaths: [],
-    description: 'Open-source AI code assistant plugin',
-    descriptionZh: '开源 AI 代码助手插件',
-    icon: '🔌',
-  },
-  {
-    id: 'github-copilot',
-    name: 'GitHub Copilot',
-    nameZh: 'GitHub Copilot',
-    configPaths: [],
-    description: 'GitHub official AI pair programmer',
-    descriptionZh: 'GitHub 官方 AI 结对编程工具',
-    icon: '👾',
-  },
-  {
     id: 'opencode',
     name: 'OpenCode',
     nameZh: 'OpenCode',
@@ -96,23 +69,5 @@ export const TOOLS: ToolProfile[] = [
     description: 'Open-source AI coding assistant (SST)',
     descriptionZh: '开源 AI 编码助手 (SST)',
     icon: '📂',
-  },
-  {
-    id: 'crush',
-    name: 'Crush',
-    nameZh: 'Crush',
-    configPaths: [],
-    description: 'Terminal-native AI coding agent (tuurlijk)',
-    descriptionZh: '终端原生 AI 编码代理 (tuurlijk)',
-    icon: '💥',
-  },
-  {
-    id: 'factory-droid',
-    name: 'Factory Droid',
-    nameZh: 'Factory Droid',
-    configPaths: [],
-    description: 'AI coding agent by Factory',
-    descriptionZh: 'Factory 出品的 AI 编码代理',
-    icon: '🏭',
   },
 ];
