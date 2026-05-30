@@ -1,7 +1,7 @@
 {
   "name": "cic-ai-config-helper",
-  "version": "1.0.1",
-  "description": "AI 编码工具配置助手 — 交互式配置 Claude Code / Cursor / Continue 等 AI 编码工具",
+  "version": "1.0.2",
+  "description": "CIC AI 编码工具配置助手 — 交互式配置",
   "type": "module",
   "bin": {
     "cic-ai-config-helper": "./dist/index.js"
