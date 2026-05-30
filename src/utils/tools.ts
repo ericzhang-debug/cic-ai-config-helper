@@ -144,6 +144,13 @@ export function configureTool(toolId: AiToolId, selectedModels: string[] = []): 
         return configureClaudeCode(apiKey, selectedModels);
       case 'opencode':
         return configureOpenCode(apiKey, selectedModels);
+      case 'openclaw':
+        return configureOpenClaw(apiKey, selectedModels);
+      case 'deepcode':
+        return configureDeepCode(apiKey, selectedModels);
+      case 'workbuddy':
+      case 'codebuddy':
+        return configureCodeBuddy(apiKey, selectedModels);
       default:
         return false;
     }
@@ -188,18 +195,31 @@ function configureClaudeCode(apiKey: string, selectedModels: string[]): boolean 
 function configureOpenCode(apiKey: string, selectedModels: string[]): boolean {
   const home = homedir();
   const configDir = join(home, '.config', 'opencode');
-  const configFile = join(configDir, 'config.json');
+  const configFile = join(configDir, 'opencode.json');
   const envFile = join(configDir, '.env');
 
   backupIfExists('opencode', configFile);
   backupIfExists('opencode', envFile);
   if (!existsSync(configDir)) mkdirSync(configDir, { recursive: true });
 
+  // Single model entry (model selection is single-select)
+  const modelId = selectedModels.length > 0 ? selectedModels[0] : 'claude-sonnet-4-20250514';
+
   const openCodeConfig = {
-    provider: 'openai',
-    apiKey,
-    baseUrl: API_BASE_URL,
-    models: selectedModels.length > 0 ? selectedModels : undefined,
+    $schema: 'https://opencode.ai/config.json',
+    provider: {
+      deepseek: {
+        npm: '@ai-sdk/openai-compatible',
+        options: {
+          baseURL: API_BASE_URL,
+          apiKey,
+          setCacheKey: true,
+        },
+        models: {
+          [modelId]: { name: modelId },
+        },
+      },
+    },
   };
   writeFileSync(configFile, JSON.stringify(openCodeConfig, null, 2), 'utf-8');
 
@@ -208,6 +228,129 @@ OPENAI_API_KEY="${apiKey}"
 OPENAI_BASE_URL="${API_BASE_URL}"
 `;
   writeFileSync(envFile, envContent, 'utf-8');
+  return true;
+}
+
+// ─── OpenClaw ────────────────────────────────────────────────
+
+function configureOpenClaw(apiKey: string, selectedModels: string[]): boolean {
+  const home = homedir();
+  const configDir = join(home, '.openclaw');
+  const configFile = join(configDir, 'openclaw.json');
+
+  backupIfExists('openclaw', configFile);
+  if (!existsSync(configDir)) mkdirSync(configDir, { recursive: true });
+
+  const modelId = selectedModels.length > 0 ? selectedModels[0] : 'claude-sonnet-4-20250514';
+
+  const config = {
+    agents: {
+      defaults: {
+        models: {
+          [modelId]: { alias: modelId },
+        },
+        model: {
+          primary: modelId,
+        },
+      },
+    },
+    tools: {
+      profile: 'coding',
+    },
+    models: {
+      mode: 'merge',
+      providers: {
+        'custom-api-bocha-cn': {
+          baseUrl: API_BASE_URL,
+          api: 'anthropic-messages',
+          apiKey,
+          models: [
+            {
+              id: modelId,
+              name: modelId,
+              api: 'anthropic-messages',
+              baseUrl: API_BASE_URL,
+              reasoning: false,
+              input: ['text'],
+              cost: {
+                input: 0,
+                output: 0,
+                cacheRead: 0,
+                cacheWrite: 0,
+              },
+              contextWindow: 1_000_000,
+              maxTokens: 384_000,
+            },
+          ],
+        },
+      },
+    },
+  };
+
+  writeFileSync(configFile, JSON.stringify(config, null, 2), 'utf-8');
+  return true;
+}
+
+// ─── CodeBuddy ──────────────────────────────────────────────
+
+function configureCodeBuddy(apiKey: string, selectedModels: string[]): boolean {
+  const home = homedir();
+  const configDir = join(home, '.codebuddy');
+  const configFile = join(configDir, 'models.json');
+
+  backupIfExists('codebuddy', configFile);
+  if (!existsSync(configDir)) mkdirSync(configDir, { recursive: true });
+
+  const modelId = selectedModels.length > 0 ? selectedModels[0] : 'claude-sonnet-4-20250514';
+
+  const config = {
+    models: [
+      {
+        id: modelId,
+        name: modelId,
+        vendor: 'ECUST-CIC',
+        url: `${API_BASE_URL}/chat/completions`,
+        apiKey,
+        maxInputTokens: 128_000,
+        maxOutputTokens: 8_192,
+        supportsToolCall: true,
+        supportsImages: false,
+        relatedModels: {
+          lite: modelId,
+          reasoning: modelId,
+        },
+      },
+    ],
+    availableModels: [modelId],
+  };
+
+  writeFileSync(configFile, JSON.stringify(config, null, 2), 'utf-8');
+  return true;
+}
+
+// ─── Deep Code ──────────────────────────────────────────────
+
+function configureDeepCode(apiKey: string, selectedModels: string[]): boolean {
+  const home = homedir();
+  const configDir = join(home, '.deepcode');
+  const configFile = join(configDir, 'settings.json');
+
+  backupIfExists('deepcode', configFile);
+  if (!existsSync(configDir)) mkdirSync(configDir, { recursive: true });
+
+  const modelId = selectedModels.length > 0 ? selectedModels[0] : 'claude-sonnet-4-20250514';
+
+  const config = {
+    env: {
+      MODEL: modelId,
+      BASE_URL: 'https://ai.ecustcic.com/api',
+      API_KEY: apiKey,
+    },
+    thinkingEnabled: true,
+    reasoningEffort: 'max',
+  };
+
+  writeFileSync(configFile, JSON.stringify(config, null, 2), 'utf-8');
   return true;
 }
 
@@ -221,6 +364,16 @@ export function launchTool(toolId: AiToolId): boolean {
         return true;
       case 'opencode':
         execSync('where opencode 2>nul || where open-code 2>nul', { stdio: 'ignore' });
+        return true;
+      case 'openclaw':
+        execSync('where openclaw 2>nul', { stdio: 'ignore' });
+        return true;
+      case 'deepcode':
+        execSync('where deepcode 2>nul', { stdio: 'ignore' });
+        return true;
+      case 'workbuddy':
+      case 'codebuddy':
+        execSync('where codebuddy 2>nul', { stdio: 'ignore' });
         return true;
       default:
         return false;
@@ -239,6 +392,16 @@ export function isToolAvailable(toolId: AiToolId): boolean {
       case 'opencode':
         execSync('where opencode 2>nul || where open-code 2>nul', { stdio: 'ignore' });
         return true;
+      case 'openclaw':
+        execSync('where openclaw 2>nul', { stdio: 'ignore' });
+        return true;
+      case 'deepcode':
+        execSync('where deepcode 2>nul', { stdio: 'ignore' });
+        return true;
+      case 'workbuddy':
+      case 'codebuddy':
+        execSync('where codebuddy 2>nul', { stdio: 'ignore' });
+        return true;
       default:
         return false;
     }
@@ -253,7 +416,14 @@ export function getToolConfigPaths(toolId: AiToolId): string[] {
     case 'claude-code':
       return [join(home, '.claude', 'settings.json')];
     case 'opencode':
-      return [join(home, '.config', 'opencode', 'config.json'), join(home, '.config', 'opencode', '.env')];
+      return [join(home, '.config', 'opencode', 'opencode.json'), join(home, '.config', 'opencode', '.env')];
+    case 'openclaw':
+      return [join(home, '.openclaw', 'openclaw.json')];
+    case 'deepcode':
+      return [join(home, '.deepcode', 'settings.json')];
+    case 'workbuddy':
+    case 'codebuddy':
+      return [join(home, '.codebuddy', 'models.json')];
     default:
       return [];
   }

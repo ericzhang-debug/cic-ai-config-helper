@@ -11,7 +11,7 @@ export interface ApiEndpoints {
 }
 
 /** Supported AI coding tools */
-export type AiToolId = 'claude-code' | 'opencode';
+export type AiToolId = 'claude-code' | 'opencode' | 'openclaw' | 'workbuddy' | 'codebuddy' | 'deepcode';
 
 /** Tool configuration profile */
 export interface ToolProfile {
@@ -67,7 +67,43 @@ export const TOOLS: ToolProfile[] = [
     nameZh: 'OpenCode',
     configPaths: [],
     description: 'Open-source AI coding assistant (SST)',
-    descriptionZh: '开源 AI 编码助手 (SST)',
+    descriptionZh: '开源 AI 编码助手',
     icon: '📂',
+  },
+  {
+    id: 'openclaw',
+    name: 'OpenClaw',
+    nameZh: 'OpenClaw',
+    configPaths: [],
+    description: 'OpenClaw',
+    descriptionZh: '龙虾',
+    icon: '🦀',
+  },
+  {
+    id: 'workbuddy',
+    name: 'WorkBuddy',
+    nameZh: 'WorkBuddy',
+    configPaths: [],
+    description: 'Tencent AI work assistant',
+    descriptionZh: '腾讯 AI 工作助手',
+    icon: '🛠️',
+  },
+  {
+    id: 'deepcode',
+    name: 'Deep Code',
+    nameZh: 'Deep Code',
+    configPaths: [],
+    description: 'Deep reasoning AI coding agent',
+    descriptionZh: '深度推理 AI 编码代理',
+    icon: '🧠',
+  },
+  {
+    id: 'codebuddy',
+    name: 'CodeBuddy',
+    nameZh: 'CodeBuddy',
+    configPaths: [],
+    description: 'Tencent AI coding assistant',
+    descriptionZh: '腾讯 AI 编程助手',
+    icon: '🧑‍💻',
   },
 ];

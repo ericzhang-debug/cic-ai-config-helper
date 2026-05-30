@@ -95,12 +95,16 @@ cic-ai-config-helper --version              # 显示版本
 | Messages (Anthropic Claude) | `https://ai.ecustcic.com/api/v1/messages` |
 | Embeddings (OpenAI) | `https://ai.ecustcic.com/api/v1/embeddings` |
 
-## 暂时支持的 2 种 AI 编码工具
+## 支持的 AI 编码工具
 
 | 工具 | 图标 | 配置文件 |
 |------|------|----------|
 | **Claude Code** | 🤖 | `~/.claude/settings.json` |
-| **OpenCode** | 📂 | `~/.config/opencode/config.json` |
+| **OpenCode** | 📂 | `~/.config/opencode/opencode.json` |
+| **OpenClaw** | 🦀 | `~/.openclaw/openclaw.json` |
+| **CodeBuddy** | 🧑‍💻 | `~/.codebuddy/models.json` |
+| **WorkBuddy** | 🛠️ | `~/.codebuddy/models.json` |
+| **Deep Code** | 🧠 | `~/.deepcode/settings.json` |
 
 ## License
 
