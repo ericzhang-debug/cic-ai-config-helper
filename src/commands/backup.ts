@@ -9,7 +9,8 @@ import {
 } from '../utils/tools.js';
 import { setToolConfigured } from '../utils/config.js';
 import { TOOLS } from '../types.js';
-import type { AiToolId, BackupEntry } from '../utils/tools.js';
+import type { AiToolId, Language } from '../types.js';
+import type { BackupEntry } from '../utils/tools.js';
 import { success, error, info, warn, divider, section } from '../utils/pretty.js';
 
 // ──────────────────────────────────────────────────────────────
@@ -58,7 +59,7 @@ export async function restoreInteractiveCommand(): Promise<void> {
   }
 }
 
-async function restoreForTool(toolId: AiToolId, lang: string, allBackups: BackupEntry[]): Promise<void> {
+async function restoreForTool(toolId: AiToolId, lang: Language, allBackups: BackupEntry[]): Promise<void> {
   const toolBackups = allBackups.filter((b) => b.toolId === toolId);
   const profile = TOOLS.find((t) => t.id === toolId);
   const toolName = lang === 'zh_CN' ? profile?.nameZh : profile?.name;

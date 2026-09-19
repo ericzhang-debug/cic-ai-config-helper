@@ -48,9 +48,6 @@ export function doctorCommand(): void {
       : '—',
   });
 
-  // Language
-  const langOk = true;
-
   // Tools
   const toolResults = TOOLS.map((tool) => {
     const configured = isToolConfigured(tool.id);
@@ -99,10 +96,7 @@ export function doctorCommand(): void {
     success(t(lang, 'doctor.allGood'));
   } else {
     warn(t(lang, 'doctor.issuesFound'));
-    if (!keyOk) {
-      bullet(`${t(lang, 'doctor.suggestion')}: ${t(lang, 'doctor.runInit')}`);
-    }
-    if (!anyToolConfigured) {
+    if (!keyOk || !anyToolConfigured) {
       bullet(`${t(lang, 'doctor.suggestion')}: ${t(lang, 'doctor.runInit')}`);
     }
   }

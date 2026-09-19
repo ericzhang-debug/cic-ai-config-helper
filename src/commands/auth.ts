@@ -1,7 +1,7 @@
 import { intro, outro, select, isCancel, cancel, confirm, text, spinner } from '@clack/prompts';
 import pc from 'picocolors';
 import { t, getLang } from '../utils/i18n.js';
-import { getApiKey, setApiKey, deleteApiKey, setToolConfigured } from '../utils/config.js';
+import { getApiKey, getSelectedModels, setApiKey, deleteApiKey, setToolConfigured } from '../utils/config.js';
 import { configureTool } from '../utils/tools.js';
 import { TOOLS } from '../types.js';
 import type { AiToolId } from '../types.js';
@@ -152,7 +152,7 @@ export async function authReload(toolName?: string): Promise<void> {
   const spin = spinner();
   spin.start(t(lang, 'common.loading'));
 
-  const ok = configureTool(targetId);
+  const ok = configureTool(targetId, getSelectedModels());
   if (ok) {
     setToolConfigured(targetId, true);
     spin.stop(t(lang, 'common.done'));

@@ -1,110 +1,107 @@
-# CIC AI Config Helper 🚀
+# CIC AI Config Helper
 
-一键配置您的 AI 编码工具 — Claude Code / OpenCode
+<p align="center">
+  <strong>Configure compatible AI coding tools from one guided CLI.</strong>
+</p>
 
-## 快速开始
+<p align="center">
+  <a href="https://www.npmjs.com/package/cic-ai-config-helper"><img src="https://img.shields.io/npm/v/cic-ai-config-helper.svg?logo=npm&label=npm" alt="npm package"></a>
+  <a href="https://www.npmjs.com/package/cic-ai-config-helper"><img src="https://img.shields.io/npm/dm/cic-ai-config-helper.svg?logo=npm&label=downloads" alt="npm downloads"></a>
+  <a href="https://github.com/ericzhang-debug/cic-ai-config-helper/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/cic-ai-config-helper.svg" alt="MIT license"></a>
+</p>
+
+<p align="center">
+  <a href="readme_cn.md">中文文档</a> · <a href="https://www.npmjs.com/package/cic-ai-config-helper">View on npm</a>
+</p>
+
+CIC AI Config Helper is an interactive command-line assistant for configuring compatible AI coding tools with a CIC API key. It validates credentials, discovers models, writes tool-specific configuration, creates recoverable backups, and provides a concise system diagnostic.
+
+## Highlights
+
+- Guided bilingual setup in Chinese or English
+- API-key validation and live model discovery from `/v1/models`
+- One flow for configuring multiple tools
+- Timestamped backups before every write; multi-file configurations are saved as one restore point
+- Interactive restore by **tool** and then **backup timestamp**
+- Cross-platform command detection for optional post-setup launching
+- `doctor` command for checking configuration and tool availability
+
+## Install and run
+
+No global installation is required:
 
 ```bash
-# 直接运行（npx 自动下载）
 npx cic-ai-config-helper
-
-# 或者显式启动向导
-npx cic-ai-config-helper init
 ```
 
-## 特性
-
-- ✨ **交互式向导** — 上下方向键选择 + 空格多选，回车确认
-- 🔑 **自动验证** — 输入 API 密钥后自动调用 `/v1/models` 验证有效性
-- 🛠️ **自由选工具** — 多选你要配置的 AI 编码工具
-- 🤖 **动态选模型** — 从 `/v1/models` 实时获取模型列表，自由选择
-- 💾 **自动备份** — 每次配置前自动备份原文件
-- 🔄 **一键恢复** — 从备份中恢复到任意历史版本
-- 🌍 **双语支持** — 中文 / English
-- 🏥 **系统诊断** — 检查配置状态与工具可用性
-
-## 完整命令
-
-### 初始化向导
+Or install it globally:
 
 ```bash
-cic-ai-config-helper              # 默认启动向导
-cic-ai-config-helper init         # 显式启动向导
+npm install --global cic-ai-config-helper
+cic-ai-config-helper init
 ```
 
-向导流程：
-1. **选择界面语言** — 🇨🇳 中文 / 🇺🇸 English
-2. **输入 API 密钥** → 自动调用 `/v1/models` **验证密钥有效性**
-3. **选择 AI 编码工具** — 多选：Claude Code / OpenCode
-4. **选择 AI 模型** — 从 `/v1/models` **动态拉取模型列表**，自由多选
-5. **确认配置** — 查看摘要，确认后自动生成配置文件
-6. **启动工具**（可选）
+**Requirements:** Node.js 18 or later, an active CIC API key, and the target tool installed when you want to launch it from the wizard.
 
-### 语言管理
+## Setup workflow
 
-```bash
-cic-ai-config-helper lang show              # 显示当前语言
-cic-ai-config-helper lang set zh_CN         # 设置为中文
-cic-ai-config-helper lang set en_US         # 设置为英文
-cic-ai-config-helper lang --help            # 查看帮助
+The initialization wizard guides you through five stages:
+
+1. Choose the interface language.
+2. Enter and validate your CIC API key.
+3. Select one or more coding tools.
+4. Fetch and choose an available model.
+5. Review the summary and write the configuration.
+
+Existing configuration files are backed up before they are changed. Select **Launch configured tools now?** at the end to start tools that are installed on your system.
+
+## Commands
+
+| Command | Description |
+| --- | --- |
+| `cic-ai-config-helper` | Start the setup wizard |
+| `cic-ai-config-helper init` | Start the setup wizard explicitly |
+| `cic-ai-config-helper lang show` | Show the current language |
+| `cic-ai-config-helper lang set zh_CN` | Switch to Simplified Chinese |
+| `cic-ai-config-helper lang set en_US` | Switch to English |
+| `cic-ai-config-helper auth` | Save or replace the API key interactively |
+| `cic-ai-config-helper auth revoke` | Remove the locally saved API key |
+| `cic-ai-config-helper auth reload <tool>` | Re-apply configuration for one tool |
+| `cic-ai-config-helper doctor` | Inspect local configuration and tool availability |
+| `cic-ai-config-helper restore` | Restore a backup by tool and timestamp |
+
+## Supported configuration targets
+
+| Tool | Configuration files |
+| --- | --- |
+| Claude Code | `~/.claude/settings.json` |
+| OpenCode | `~/.config/opencode/opencode.json`, `~/.config/opencode/.env` |
+| OpenClaw | `~/.openclaw/openclaw.json` |
+| Codex | `~/.codex/config.toml`, `~/.codex/models.json` |
+| Hermes | `~/.hermes/config.yaml` |
+| CodeBuddy | `~/.codebuddy/models.json` |
+| WorkBuddy | `~/.codebuddy/models.json` |
+| Deep Code | `~/.deepcode/settings.json` |
+
+## API endpoints
+
+| API | Endpoint |
+| --- | --- |
+| Base URL | `https://ai.ecustcic.com/api/v1` |
+| OpenAI Chat Completions | `https://ai.ecustcic.com/api/v1/chat/completions` |
+| OpenAI Responses | `https://ai.ecustcic.com/api/v1/responses` |
+| Anthropic Messages | `https://ai.ecustcic.com/api/v1/messages` |
+| Embeddings | `https://ai.ecustcic.com/api/v1/embeddings` |
+
+## Backups and local data
+
+Backups are stored under:
+
+```text
+~/.config/cic-ai-config-helper/backups/
 ```
 
-### API 密钥管理
-
-```bash
-cic-ai-config-helper auth                   # 交互式设置密钥
-cic-ai-config-helper auth revoke            # 删除已保存的密钥
-cic-ai-config-helper auth reload claude     # 将配置加载至 Claude Code
-cic-ai-config-helper auth reload cursor     # 将配置加载至 Cursor
-cic-ai-config-helper auth --help            # 查看帮助
-```
-
-### 系统诊断
-
-```bash
-cic-ai-config-helper doctor                 # 检查系统配置状态
-```
-
-### 备份恢复
-
-每次配置工具前，助手会**自动备份**已有配置文件。
-
-```bash
-cic-ai-config-helper restore               # 交互式恢复配置
-```
-
-恢复流程：选择工具 → 选择备份版本（按时间） → 确认恢复
-
-备份存储在 `~/.config/cic-ai-config-helper/backups/` 目录下，按工具和版本时间组织。
-
-### 通用
-
-```bash
-cic-ai-config-helper --help                 # 显示全部帮助
-cic-ai-config-helper --version              # 显示版本
-```
-
-## 配置的 Base URLs
-
-| 服务 | 端点 |
-|------|------|
-| API 基础地址 | `https://ai.ecustcic.com/api/v1` |
-| Chat Completions (OpenAI) | `https://ai.ecustcic.com/api/v1/chat/completions` |
-| Chat (Ollama) | `https://ai.ecustcic.com/api/ollama/api/chat` |
-| Responses (OpenAI) | `https://ai.ecustcic.com/api/v1/responses` |
-| Messages (Anthropic Claude) | `https://ai.ecustcic.com/api/v1/messages` |
-| Embeddings (OpenAI) | `https://ai.ecustcic.com/api/v1/embeddings` |
-
-## 支持的 AI 编码工具
-
-| 工具 | 图标 | 配置文件 |
-|------|------|----------|
-| **Claude Code** | 🤖 | `~/.claude/settings.json` |
-| **OpenCode** | 📂 | `~/.config/opencode/opencode.json` |
-| **OpenClaw** | 🦀 | `~/.openclaw/openclaw.json` |
-| **CodeBuddy** | 🧑‍💻 | `~/.codebuddy/models.json` |
-| **WorkBuddy** | 🛠️ | `~/.codebuddy/models.json` |
-| **Deep Code** | 🧠 | `~/.deepcode/settings.json` |
+The API key is stored locally in the CIC AI Config Helper configuration directory. Treat generated tool configuration files as sensitive because some tools store the API key directly.
 
 ## License
 

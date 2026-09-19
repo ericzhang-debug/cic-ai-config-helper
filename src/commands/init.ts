@@ -28,6 +28,7 @@ export async function initCommand(): Promise<void> {
   info(t(lang, 'init.welcomeDesc'));
   console.log();
 
+
   // ── Step 1: Select Language ────────────────────────────────
   const selectedLang = await selectLanguage(lang);
   if (!selectedLang) return;
@@ -35,22 +36,26 @@ export async function initCommand(): Promise<void> {
   const L = selectedLang;
   success(`${t(L, 'lang.set')}: ${pc.bold(selectedLang)}`);
 
+
   // ── Step 2: Enter & Validate API Key ──────────────────────
   const apiKey = await enterAndValidateKey(L);
   if (!apiKey) return;
   setApiKey(apiKey);
   success(t(L, 'auth.keySaved'));
 
+
   // ── Step 3: Select Tools (multi-select) ───────────────────
   const selectedTools = await selectTools(L);
   if (!selectedTools || selectedTools.length === 0) return;
+
 
   // ── Step 4: Fetch & Select Models ─────────────────────────
   const selectedModels = await selectModels(L, apiKey);
   if (!selectedModels) return; // user cancelled
 
+
   // ── Step 5: Confirm & Configure ──────────────────────────
-  section(t(L, 'init.summary'));
+  section(t(L, 'init.summary'), L === 'zh_CN' ? '请确认以下选择' : 'Review your selections');
 
   console.log(`  ${pc.bold(t(L, 'init.selectTools'))}`);
   for (const toolId of selectedTools) {
@@ -84,10 +89,8 @@ export async function initCommand(): Promise<void> {
   let configured = 0;
   for (const toolId of selectedTools) {
     const ok = configureTool(toolId, selectedModels);
-    if (ok) {
-      setToolConfigured(toolId, true);
-      configured++;
-    }
+    setToolConfigured(toolId, ok);
+    if (ok) configured++;
   }
   spin.stop(t(L, 'common.done'));
 
@@ -153,12 +156,15 @@ export async function initCommand(): Promise<void> {
 //  Helper functions
 // ──────────────────────────────────────────────────────────────
 
+
+// ──────────────────────────────────────────────────────────────
+
 async function selectLanguage(currentLang: Language): Promise<Language | null> {
   const result = await select({
     message: t(currentLang, 'lang.select'),
     options: [
-      { value: 'zh_CN' as Language, label: '🇨🇳 中文 (简体)' },
-      { value: 'en_US' as Language, label: '🇺🇸 English' },
+      { value: 'zh_CN' as Language, label: '[中文] 简体中文' },
+      { value: 'en_US' as Language, label: '[EN] English' },
     ],
     initialValue: currentLang,
   });

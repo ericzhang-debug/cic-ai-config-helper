@@ -1,6 +1,6 @@
 {
   "name": "cic-ai-config-helper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "CIC AI 编码工具配置助手 — 交互式配置",
   "type": "module",
   "bin": {
@@ -8,7 +8,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "readme_cn.md"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm --clean --dts --outDir dist --minify",

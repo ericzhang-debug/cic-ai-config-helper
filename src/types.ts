@@ -11,7 +11,7 @@ export interface ApiEndpoints {
 }
 
 /** Supported AI coding tools */
-export type AiToolId = 'claude-code' | 'opencode' | 'openclaw' | 'workbuddy' | 'codebuddy' | 'deepcode';
+export type AiToolId = 'claude-code' | 'opencode' | 'openclaw' | 'workbuddy' | 'codebuddy' | 'deepcode' | 'codex' | 'hermes';
 
 /** Tool configuration profile */
 export interface ToolProfile {
@@ -105,5 +105,23 @@ export const TOOLS: ToolProfile[] = [
     description: 'Tencent AI coding assistant',
     descriptionZh: '腾讯 AI 编程助手',
     icon: '🧑‍💻',
+  },
+  {
+    id: 'codex',
+    name: 'Codex',
+    nameZh: 'Codex',
+    configPaths: [],
+    description: 'OpenAI coding agent using the Responses API',
+    descriptionZh: 'OpenAI 编程代理，使用 Responses API',
+    icon: '🧩',
+  },
+  {
+    id: 'hermes',
+    name: 'Hermes',
+    nameZh: 'Hermes',
+    configPaths: [],
+    description: 'Nous Research open-source AI agent',
+    descriptionZh: 'Nous Research 开源 AI 代理',
+    icon: '🪽',
   },
 ];

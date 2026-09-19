@@ -1,4 +1,5 @@
 import type { Language } from '../types.js';
+import { getLanguage } from './config.js';
 
 type TranslationValue = string | ((...args: string[]) => string);
 
@@ -225,20 +226,26 @@ export function t(lang: Language, path: string, ...args: string[]): string {
   }
 
   if (typeof current === 'string') {
-    // Replace {0}, {1}, ... or named placeholders
-    let result = current;
-    args.forEach((arg, i) => {
-      result = result.replace(`{${i}}`, arg);
+    const namedValues: Record<string, string | undefined> = {
+      tool: args[0],
+      count: args[0],
+      modelCount: args[1],
+      error: args[1],
+    };
+    return current.replace(/\{(\d+|tool|count|modelCount|error)\}/g, (placeholder, key) => {
+      const value = /^\d+$/.test(key) ? args[Number(key)] : namedValues[key];
+      return value ?? placeholder;
     });
-    return result;
   }
 
   return String(current ?? path);
 }
 
 export function getLang(): Language {
-  // Check environment or default to zh_CN
-  const env = process.env.CIC_LANG || 'zh_CN';
+  // An explicit environment variable is useful for one-off runs, while the
+  // persisted setting should be the normal source of truth.
+  const env = process.env.CIC_LANG;
   if (env === 'en_US') return 'en_US';
-  return 'zh_CN';
+  if (env === 'zh_CN') return 'zh_CN';
+  return getLanguage();
 }
